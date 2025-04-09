@@ -1,4 +1,4 @@
-name: Python CI
+name: Python CI and Deploy
 
 on:
   push:
@@ -11,6 +11,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,3 +28,11 @@ jobs:
 
       - name: Run Tests
         run: pytest
+
+      # Assuming your static site is generated in a "public" or "docs" folder
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public  # <-- Change this to your output directory
